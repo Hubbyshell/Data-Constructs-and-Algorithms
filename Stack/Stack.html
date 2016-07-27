@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Algorithms && Data Struct</title>
+	<script type="text/javascript">
+		//Stack
+		function Stack(){
+			var items = [];
+			//进栈
+			this.push = function(element){
+				items.push(element);
+			};
+			//出栈
+			this.pop = function(){
+				return items.pop();
+			};
+			//返回栈顶元素
+			this.peek = function(){
+				return items[items.length - 1];
+			};
+			//栈判空，空返回true，反之返回false
+			this.isEmpty = function(){
+				return items.length == 0;
+			};
+			//清空栈
+			this.clear = function(){
+				items = [];//items.length = 0;
+			};
+			//返回栈中元素个数
+			this.size = function(){
+				return items.length;
+			};
+			//查看栈中元素
+			this.print = function(){
+				console.log(items.toString());
+			};
+		}
+		//十进制转换为其他进制
+		function divideByBase(decNumber,base){
+			var remStack = new Stack();
+			var rem;
+			var binaryString = '';
+			var digits = "0123456789ABCDEF";
+			while(decNumber > 0){
+				rem = Math.floor(decNumber % base);
+				if(base != 16){
+					remStack.push(rem);
+				}else{
+					remStack.push(digits[rem]);
+				}
+				decNumber = Math.floor(decNumber / base);
+			}
+			while(!remStack.isEmpty()){
+				binaryString += remStack.pop().toString();
+			}
+			return binaryString;
+		}
+		console.log(divideByBase(126,8));
+	</script>
+</head>
+<body>
+
+</body>
+</html>
