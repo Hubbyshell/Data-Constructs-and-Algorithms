@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>HashTable</title>
+	<script type="text/javascript">
+		function LinkedList(){
+			//Node类表示链表中操作的项
+			var Node = function(element){
+				this.element = element;
+				this.next = null;
+			}
+
+			var length = 0;
+			var head = null;
+
+			//链表尾部添加一项
+			this.append = function(element){
+				var node = new Node(element);
+				var current;
+				if(head == null){
+					head = node;
+				}else{
+					current = head;
+					while(current.next){
+						current = current.next;
+					}
+					current.next = node;
+				}
+				length++;
+			};
+
+			//特定位置添加元素
+			this.insert = function(position, element){
+				var node = new Node(element);
+				var current = head;
+				var previous;
+				var index = 0;
+
+				//检查越界位置
+				if(position >= 0 && position <= length){
+					if (position === 0) {
+						node.next = current;
+						head = node;
+					}else{
+						while(index++ < position){
+							previous = current;
+							current = current.next;
+						}
+						node.next = current;
+						previous.next = node;
+					}
+					length++;
+					return true;
+				}else{
+					return false;
+				}
+			};
+
+			//从链表中移除特定位置一项
+			this.removeAt = function(position){
+
+				if(position > -1 && position < length){//下标越界检查
+					var current = head;
+					var previous;
+					var index = 0;
+
+					if(position === 0){
+						head = current.next;
+					}else{
+						while(index++ < position){
+							previous = current;
+							current = current.next;
+						}
+						previous.next = current.next;
+					}
+					length--;
+					return current.element;
+				}else{
+					return null;
+				}
+			};
+
+			//从链表中移除一项
+			this.remove = function(element){
+				var index = this.indexOf(element);
+				return this.removeAt(index);
+			};
+
+			//返回列表中项的索引
+			this.indexOf = function(element){
+				var current = head;
+				var index = 0;
+				while(current){
+					if (element == current.element) {
+						return index;
+					}
+					index++;
+					current = current.next;
+				}
+				return -1;
+			};
+			//判空
+			this.isEmpty = function(){
+				return length === 0;
+			};
+			//链表中的长度
+			this.size = function(){
+				return length;
+			};
+
+			//返回第一个元素
+			this.getHead = function(){
+				return head;
+			}
+
+			this.toString = function(){
+				var current = head;
+				var string = '';
+				while(current){
+					string += current.element;
+					current = current.next;
+				}
+				return string;
+			};
+
+			this.print = function(){
+				console.log(this.toString());
+			}
+		}
+
+
+		function HashTable(){
+			var table = [];
+
+			//散列函数
+			var loseloseHashCode = function(key){
+				var hash = 5381;
+				for(var i = 0; i < key.length; i++){
+					hash = hash * 33 + key.charCodeAt(i);
+				}
+				return hash % 1013;
+			};
+
+			//散列表辅助类
+			var ValuePair = function(key, value){
+				this.key = key;
+				this.value = value;
+
+				this.toString = function(){
+					return '[' + this.key + '-' + this.value + ']'
+				}
+			};
+
+			//向散列表增加一项
+			this.put = function(key, value){
+				var position = loseloseHashCode(key);
+				if(table[position] == undefined){
+					table[position] = new LinkedList();
+				}
+				table[position].append(new ValuePair(key, value));
+			};
+
+			//根据键值从散列表中移除一项
+			this.remove = function(key){
+				var position = loseloseHashCode(key);
+
+				if (table[position] !== undefined) {
+					 var current = table[position].getHead();
+					 while(current.next){
+					 	if (current.element.key === key) {
+					 		table[position].remove(current.element);
+					 		if (table[position].isEmpty()) {
+					 			table[position] = undefined;
+					 		}
+					 		return true;
+					 	}
+					 	current = current.next;
+					 }
+
+					 if (current.element.key === key) {
+					 	table[position].remove(current.element);
+					 		if (table[position].isEmpty()) {
+					 			table[position] = undefined;
+					 		}
+					 		return true;
+					 }
+				}
+
+				return false;
+			};
+
+			//返回根据键值检索到的特定的值
+			this.get = function(key){
+				var position = loseloseHashCode(key);
+
+				if (table[position] !== undefined) {
+					//找到起始指针
+					var current = table[position].getHead();
+
+					//遍历链表寻找键值对
+					while(current.next){
+						if (current.element.key === key) {
+							return current.element.value;
+						}
+						current = current.next;
+					}
+
+					//检查元素在链表第一个和最后一个节点的情况
+					if (current.element.key === key) {
+						return current.element.value; 
+					}
+				}
+
+				return undefined;
+			};
+		}
+	</script>
+</head>
+<body>
+
+</body>
+</html>
