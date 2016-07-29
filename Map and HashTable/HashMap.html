@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>HashMap</title>
+	<script type="text/javascript">
+		function HahsMap(){
+
+			var table = [];
+
+			var djb2HashCode = function(key){
+				var hash = 5381;
+				for(var i = 0; i < key.length; i++){
+					hash = hash * 33 + key.charCodeAt(i);
+				}
+
+				return hash % 1013;
+			}
+
+			var ValuePair = function(key, value){
+				this.key = key;
+				this.vlaue = vlaue;
+
+				this.toString = function(){
+					retu '[' + this.key + '-' + this.value + ']';
+				}
+			}
+
+			this.put = function(key, value){
+				var position = djb2HashCode(key);
+				if(table[position] == undefined){
+					table[position] = new ValuePair(key, value); 
+				}else{
+					var index = ++position;
+					while(table[index] != undefined){
+						index++;
+					}
+					table[index] = new ValuePair(key, value); 
+				}
+			};
+
+			this.get = function(key){
+				var position = djb2HashCode(key);
+				if(table[position] !== undefined){
+					if(table[position].key === key){
+						return table[position].value;
+					}else{
+						var index = ++position;
+						while(table[index] === undefined || table[position].key !== key){
+							index++;
+						}
+						if (table[index].key === key) {
+							return table[index].value;
+						}
+					}
+				}
+
+				return undefined;
+			};
+
+			this.remove = function(key){
+				var position = djb2HashCode(key);
+				if (table[position] !== undefined) {
+					if (table[position].key === key) {
+						table[position] = undefined;
+						return true;
+					}else{
+						var index = ++position;
+						while(table[index] === undefined || table[index].key !== key){
+							index++;
+						}
+						if (table[index].key === key) {
+							table[index] = undefined;
+							return true;
+						}
+					}
+				}
+
+				return false;
+			};
+		}
+	</script>
+</head>
+<body>
+
+</body>
+</html>
